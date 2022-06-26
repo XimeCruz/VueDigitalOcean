@@ -21,10 +21,10 @@
                         >
                         </v-combobox>
                 
-                <div v-for="post of posts" v-bind:key="post.id">
+                <!--div v-for="post of posts" v-bind:key="post.id">
         <h5>{{post.title}}</h5>
         <p>{{post.body}}</p>
-    </div>
+    </div-->
                 <v-row no-gutters align="center"
       justify="center"
                     class="mx-12 mb-6">
