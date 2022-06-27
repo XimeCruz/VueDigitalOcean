@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-row>
-            <v-col v-for="(event,index) in events" :key="index" cols="12" sm="6" xl="3" lg="4" md="6" class="mb-6">
+            <v-col v-for="event of events" v-bind:key="event.id" cols="12" sm="6" xl="3" lg="4" md="6" class="mb-6">
                 <v-card
                     class="mx-auto"
                     elevation="0"
@@ -9,10 +9,10 @@
                     <v-list-item three-line>
                     <v-list-item-content>
                         <v-list-item-title class="text-h5 mb-1">
-                        {{event.title}}
+                        {{event.name}}
                         </v-list-item-title>
-                        <v-list-item-subtitle class="text-caption">{{event.date}} - {{event.city}}</v-list-item-subtitle>
-                        <v-list-item-content class="text-body-2">{{event.description}}</v-list-item-content>
+                        <v-list-item-subtitle class="text-caption">{{event.saleEnd}} - {{event.city.value}}</v-list-item-subtitle>
+                        <v-list-item-content class="text-body-2">{{event.eventType.value}}</v-list-item-content>
                     </v-list-item-content>
 
                     <v-list-item-avatar
@@ -20,7 +20,7 @@
                         size="80"
                         color="grey"
                     >
-                    <v-img :src="'https://picsum.photos/'+getRandomArbitrary(1,200)+'/'+getRandomArbitrary(1,200)"></v-img>
+                    <v-img :src="''+event.homeImage"></v-img>
                     </v-list-item-avatar>
                     </v-list-item>
                     <v-btn
@@ -39,8 +39,11 @@
 </template>
 <script>
 import router from '../router';
+const URI = 'https://api.superticket.live/api/portal/events';
 export default {
-
+    created(){
+        this.getEvents();
+    },
     
   data: () => ({
     events:[
@@ -110,6 +113,13 @@ export default {
         ]
   }),
   methods:{
+    async getEvents(){
+        const response = await fetch(URI);
+        const data = await response.json();
+        console.log(data.content[0].name);
+        this.events = data.content;
+    },
+
     getRandomArbitrary(min, max) {
         return (Math.random() * (max - min) + min).toFixed();
         },
