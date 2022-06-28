@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-row>
-            <v-col v-for="event of events" v-bind:key="event.id" cols="12" sm="6" xl="3" lg="4" md="6" class="mb-6">
+            <v-col v-for="event in events" v-bind:key="event.id" cols="12" sm="6" xl="3" lg="4" md="6" class="mb-6">
                 <v-card
                     class="mx-auto"
                     elevation="0"
@@ -12,7 +12,7 @@
                         {{event.name}}
                         </v-list-item-title>
                         <v-list-item-subtitle class="text-caption">{{event.saleEnd}} - {{event.city.value}}</v-list-item-subtitle>
-                        <v-list-item-content class="text-body-2">{{event.eventType.value}}</v-list-item-content>
+                        <v-list-item-content class="text-body-2">{{event.eventType .value}}</v-list-item-content>
                     </v-list-item-content>
 
                     <v-list-item-avatar
@@ -25,7 +25,7 @@
                     </v-list-item>
                     <v-btn
                         color="primary"
-                        v-on:click="accept"
+                        v-on:click="accept(event.id)"
                         elevation="0"
                         text
                         class="accept-button"
@@ -38,6 +38,7 @@
     </v-container>
 </template>
 <script>
+import TicketModel from '../models/TicketModel';
 import router from '../router';
 const URI = 'https://api.superticket.live/api/portal/events';
 export default {
@@ -46,71 +47,8 @@ export default {
     },
     
   data: () => ({
-    events:[
-        {
-            title:"Reto Extremo",
-            description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam aliquam cursus molestie. Nam nibh mauris, posuere id elit sit amet.",
-            date:"29 de abril del 2022",
-            city:"La Paz",
-            type:"Deportes",
-            category:"Partidos Nacionales",
-            image:"https://s3.sa-east-1.amazonaws.com/superticket-bol/events/CFGVCwfzFikaSVscqwOI.png"
-        },
-        
-        {
-            title:"Proyecto Cultural Barranco",
-            description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam aliquam cursus molestie. Nam nibh mauris, posuere id elit sit amet.",
-            date:"26 de marzo del 2022",
-            city:"La Paz",
-            type:"Fiestas Festivales",
-            category:"Festival",
-            image:"https://picsum.photos/200/300"
-        },
-        
-        {
-            title:"Reto Extremo",
-            description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam aliquam cursus molestie. Nam nibh mauris, posuere id elit sit amet.",
-            date:"29 de abril del 2022",
-            city:"La Paz",
-            type:"Deportes",
-            category:"Partidos Nacionales",
-            image:"https://picsum.photos/",
-        },
-        
-        
-        {
-            title:"Reto Extremo",
-            description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam aliquam cursus molestie. Nam nibh mauris, posuere id elit sit amet.",
-            date:"29 de abril del 2022",
-            city:"La Paz",
-            type:"Deportes",
-            category:"Partidos Nacionales",
-            image:"https://s3.sa-east-1.amazonaws.com/superticket-bol/events/CFGVCwfzFikaSVscqwOI.png"
-        },
-        
-        
-        {
-            title:"Reto Extremo",
-            description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam aliquam cursus molestie. Nam nibh mauris, posuere id elit sit amet.",
-            date:"29 de abril del 2022",
-            city:"La Paz",
-            type:"Deportes",
-            category:"Partidos Nacionales",
-            image:"https://s3.sa-east-1.amazonaws.com/superticket-bol/events/CFGVCwfzFikaSVscqwOI.png"
-        },
-        
-        
-        {
-            title:"Reto Extremo",
-            description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam aliquam cursus molestie. Nam nibh mauris, posuere id elit sit amet.",
-            date:"29 de abril del 2022",
-            city:"La Paz",
-            type:"Deportes",
-            category:"Partidos Nacionales",
-            image:"https://s3.sa-east-1.amazonaws.com/superticket-bol/events/CFGVCwfzFikaSVscqwOI.png"
-        }
-
-        ]
+    events:[],
+    idEvent:0
   }),
   methods:{
     async getEvents(){
@@ -123,8 +61,10 @@ export default {
     getRandomArbitrary(min, max) {
         return (Math.random() * (max - min) + min).toFixed();
         },
-    accept(){
-        router.push({path:'ticket'})
+    accept: function(ticket_id){
+        //router.push({path:'ticket'})
+        //router.push({ name: 'Ticket', params: { id: ticket_id } })  router
+        router.push({ name: 'Ticket', params: { id: ticket_id, ticket: new TicketModel(ticket_id,'Kalamarka','dddd',[30,45,50]) }})
         }
   }
 

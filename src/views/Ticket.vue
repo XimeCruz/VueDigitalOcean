@@ -9,8 +9,19 @@
                     elevation="0"
                 >
                 <v-card-title class="mb-6">Selecciona el Ticket</v-card-title>
-                
+
                         <v-combobox
+
+                            v-model="select"
+                            label="Tipo de Ticket"
+                            :items="items"                
+                            class="mx-12 mb-6"
+                            color="primary"
+                            outlined
+                        >
+                        </v-combobox>
+                
+                        <!--v-combobox
 
                             v-model="select"
                             label="Tipo de Ticket"
@@ -19,7 +30,7 @@
                             color="primary"
                             outlined
                         >
-                        </v-combobox>
+                        </v-combobox-->
                 
                 <!--div v-for="post of posts" v-bind:key="post.id">
         <h5>{{post.title}}</h5>
@@ -70,9 +81,12 @@
 </template>
 <script>
 
-const URI = 'https://jsonplaceholder.typicode.com/posts';
+const URI = 'https://api.superticket.live/api/portal/ticket-books?event-id=';
 export default {
     created(){
+        //this.items=this.$route.params.ticket.precios;
+        //this.precios=this.$route.params.ticket.precios;
+        //console.log(this.$route.params.ticket.precios);
         this.getPosts();
     },
 
@@ -80,21 +94,23 @@ export default {
     
         select: null,
         count: 1,
-        items: [
-          'VIP -180 Bs',
-          'Especial - 130 BS',
-          'Normal - 100 BS ',
-        ],
-        precios:[180.0,130.0,100.0],
-        posts : []
+        items: [],
+        precios:[],
+        posts : [],
+        cantidad :10,
   }),
   methods:{
 
     async getPosts(){
-        const response = await fetch(URI);
+        //const si cambia
+        const response = await fetch(URI+this.$route.params.id);
         const data = await response.json();
         console.log(data);
-        this.posts = data;
+        
+        data.forEach(element => {
+            this.items.push(element.name+' - '+element.ticketPriceOnline.price+' BOB')
+            this.precios.push(element.ticketPriceOnline.price)
+        });
     },
         
     getTotalPrice(){
@@ -114,7 +130,9 @@ export default {
             window.Payment.postMessage(JSON.stringify({
                 "count":this.count,
                 "totalPrice":this.getTotalPrice(),
-                "item":this.select
+                "item":this.select,
+                "description":this.count,
+                "idAfiliado":'SuPERTICKET',
             }));
         }
     }

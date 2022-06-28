@@ -11,9 +11,11 @@ const routes = [
     component: Home,
   },
   {
-    path: '/ticket',
+    path: '/ticket/:id',
     name: 'Ticket',
     component: Ticket,
+    //props:(route)=>({ routee
+    props: true 
   },
   { path: '*', redirect: '/home' }
 ]
