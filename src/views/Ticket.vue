@@ -21,21 +21,6 @@
                         >
                         </v-combobox>
                 
-                        <!--v-combobox
-
-                            v-model="select"
-                            label="Tipo de Ticket"
-                            :items="items"
-                            class="mx-12 mb-6"
-                            color="primary"
-                            outlined
-                        >
-                        </v-combobox-->
-                
-                <!--div v-for="post of posts" v-bind:key="post.id">
-        <h5>{{post.title}}</h5>
-        <p>{{post.body}}</p>
-    </div-->
                 <v-row no-gutters align="center"
       justify="center"
                     class="mx-12 mb-6">
@@ -61,8 +46,10 @@
                         ></v-text-field>
                     </v-col>
                 </v-row>
+                <v-row>
+                </v-row>
                         <v-text-field
-                        class="mx-12"
+                            class="mx-12"
                             label="Precio Total"
                             :value="getTotalPrice()+' Bs.'"
                             readonly
@@ -81,61 +68,67 @@
 </template>
 <script>
 
-const URI = 'https://api.superticket.live/api/portal/ticket-books?event-id=';
+const URI = 'https://superticket-api-4rp34.ondigitalocean.app/compras/sector/';
 export default {
-    created(){
-        //this.items=this.$route.params.ticket.precios;
-        //this.precios=this.$route.params.ticket.precios;
-        //console.log(this.$route.params.ticket.precios);
-        this.getPosts();
+    created() {
+        this.getTickets();
     },
-
-  data: () => ({
-    
+    data: () => ({
         select: null,
         count: 1,
         items: [],
-        precios:[],
-        posts : [],
-        cantidad :10,
-  }),
-  methods:{
-
-    async getPosts(){
-        //const si cambia
-        const response = await fetch(URI+this.$route.params.id);
-        const data = await response.json();
-        console.log(data);
-        
-        data.forEach(element => {
-            this.items.push(element.name+' - '+element.ticketPriceOnline.price+' BOB')
-            this.precios.push(element.ticketPriceOnline.price)
-        });
-    },
-        
-    getTotalPrice(){
-        console.log("adfsdf");
-        if(this.select==null){
-            return 0;
+        precios: [],
+        tipo: [],
+        idTickets: [],
+        cantidad: 10,
+    }),
+    methods: {
+        async getTickets() {
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            };
+            const response = await fetch(URI + this.$route.params.id + "?sector=platea&csrf=PwIYHsT04M2RzQovsLuSnn8LyFBsj6ak", requestOptions);
+            const data = await response.json();
+            data.id_entrada.forEach(element => {
+                this.idTickets.push(element);
+            });
+            data.nombre_entrada.forEach(element => {
+                this.tipo.push(element);
+            });
+            data.precio_entrada.forEach(element => {
+                this.precios.push(element);
+            });
+            for (var i = 0; i < 3; i++) {
+                this.items.push(this.tipo[i] + " - " + this.precios[i]);
+            }
+        },
+        getTotalPrice() {
+            //console.log("adfsdf");
+            if (this.select == null) {
+                return 0;
+            }
+            var index = this.items.indexOf(this.select);
+            return this.precios[index] * this.count;
+        },
+        /*sell: function(id_event){
+                router.push({ name: 'Ticket', params: { id: id_event, ticket: new TicketModel(id_event,'Kalamarka','dddd',[30,45,50]) }})
+        },*/
+        accept() {
+            var index = this.items.indexOf(this.select);
+            console.log(this.idTickets[index]);
+            console.log(this.select);
+            console.log(this.getTotalPrice());
+            if (this.select != null && this.getTotalPrice() != 0) {
+                console.log("send");
+                window.Payment.postMessage(JSON.stringify({
+                    "count": this.count,
+                    "totalPrice": this.getTotalPrice(),
+                    "item": this.select,
+                    "description": this.count,
+                }));
+            }
         }
-        var index= this.items.indexOf(this.select);
-        return this.precios[index]*this.count;
     },
-    accept(){
-        console.log(this.select);
-        console.log(this.getTotalPrice());
-        if(this.select!=null &&this.getTotalPrice()!=0){
-            console.log("send");
-            
-            window.Payment.postMessage(JSON.stringify({
-                "count":this.count,
-                "totalPrice":this.getTotalPrice(),
-                "item":this.select,
-                "description":this.count,
-                "idAfiliado":'SuPERTICKET',
-            }));
-        }
-    }
-  }
 }
 </script>

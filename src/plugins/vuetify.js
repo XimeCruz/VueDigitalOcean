@@ -1,5 +1,6 @@
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib/framework';
+import Vuetify from 'vuetify/lib';
 
 Vue.use(Vuetify);
 
@@ -13,5 +14,9 @@ export default new Vuetify({
                 error: '#F44038',
             }
         }
-    }
+    },
+    customProperties: true,
+    icons: {
+        iconfont: 'md', // 'mdi' || 'mdiSvg' || 'md' || 'fa' || 'fa4' || 'faSvg'
+    },
 });

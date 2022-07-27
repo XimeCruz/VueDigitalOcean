@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router' 
 import Home from '../views/Home.vue'
 import Ticket from '../views/Ticket.vue'
+import Prices from '../views/Prices.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -14,6 +15,13 @@ const routes = [
     path: '/ticket/:id',
     name: 'Ticket',
     component: Ticket,
+    //props:(route)=>({ routee
+    props: true 
+  },
+  {
+    path: '/enviar_tooltips_mapa/:id',
+    name: 'Prices',
+    component: Prices,
     //props:(route)=>({ routee
     props: true 
   },
