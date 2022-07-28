@@ -34,7 +34,7 @@
                     <v-btn
                     depressed
                     color="black"
-                    v-on:click="sell(3)"
+                    v-on:click="sell('platea')"
                     >
                     VENDER
                     </v-btn>
@@ -155,7 +155,6 @@
     
 </template>
 <script>
-import TicketModel from '../models/TicketModel';
 import router from '../router';
 
 const URI = 'https://superticket-api-4rp34.ondigitalocean.app/compras/load/';
@@ -165,7 +164,7 @@ export default {
     },
     data: () => ({
         select: null,
-        crf: '',
+        crf: 'caLYjH4w0mSMiUaZXuzkFrPVCrihBAqn',
         info: [],
         idEvent: 0,
     }),
@@ -179,8 +178,9 @@ export default {
             this.crf=data.csrf;
             this.info=data.data;
         },
-        sell: function(id_event){
-            router.push({ name: 'Ticket', params: { id: id_event, ticket: new TicketModel(id_event,'Kalamarka','dddd',[30,45,50]) }})
+        sell: function(type_seat){
+            console.log(this.crf)
+            router.push({ name: 'Ticket', params: { id: this.$route.params.id, tipo:type_seat,csrf: this.crf }})
         }
         
     },

@@ -47,6 +47,7 @@
                     </v-col>
                 </v-row>
                 <v-row>
+                    <!-- <ChooseSeats/> -->
                 </v-row>
                         <v-text-field
                             class="mx-12"
@@ -61,14 +62,24 @@
                     Comprar
                 </v-btn>
                 </v-row>
+                <!-- <v-row align="center" justify="center">
+                    <v-btn  class="mb-6" color="primary" v-on:click="sell()">
+                        Comprar
+                    </v-btn>
+                </v-row> -->
                 </v-card>
             </v-col>
         </v-row>
     </v-container>
 </template>
 <script>
-
+//import Seat from "./Seat.vue";
+import router from '../router';
+//import ChooseSeats from './ChooseSeats.vue';
 const URI = 'https://superticket-api-4rp34.ondigitalocean.app/compras/sector/';
+const URI2 = 'https://superticket-api-4rp34.ondigitalocean.app/compras/check/';
+const URI3 = 'https://superticket-api-4rp34.ondigitalocean.app/compras/finalizar/';
+
 export default {
     created() {
         this.getTickets();
@@ -81,6 +92,16 @@ export default {
         tipo: [],
         idTickets: [],
         cantidad: 10,
+        codTicket: 96,
+        seatChooose: null,
+        persona: {
+            nombre_apellido: "test test",
+            email: "test@test.com",
+            documento: "111111111",
+            telefono: "1111111",
+            ciudad: "La Paz"
+        }
+
     }),
     methods: {
         async getTickets() {
@@ -88,7 +109,9 @@ export default {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
             };
-            const response = await fetch(URI + this.$route.params.id + "?sector=platea&csrf=PwIYHsT04M2RzQovsLuSnn8LyFBsj6ak", requestOptions);
+            console.log(this.$route.params);
+            const response = await fetch(URI + this.$route.params.id + "?sector=" + this.$route.params.tipo + "&csrf=" + this.$route.params.csrf + "", requestOptions);
+            
             const data = await response.json();
             data.id_entrada.forEach(element => {
                 this.idTickets.push(element);
@@ -104,31 +127,68 @@ export default {
             }
         },
         getTotalPrice() {
-            //console.log("adfsdf");
             if (this.select == null) {
                 return 0;
             }
             var index = this.items.indexOf(this.select);
+            this.codTicket = this.idTickets[index];
             return this.precios[index] * this.count;
         },
-        /*sell: function(id_event){
-                router.push({ name: 'Ticket', params: { id: id_event, ticket: new TicketModel(id_event,'Kalamarka','dddd',[30,45,50]) }})
-        },*/
-        accept() {
-            var index = this.items.indexOf(this.select);
-            console.log(this.idTickets[index]);
-            console.log(this.select);
-            console.log(this.getTotalPrice());
-            if (this.select != null && this.getTotalPrice() != 0) {
-                console.log("send");
-                window.Payment.postMessage(JSON.stringify({
-                    "count": this.count,
-                    "totalPrice": this.getTotalPrice(),
-                    "item": this.select,
-                    "description": this.count,
-                }));
-            }
+        sell: function () {
+            router.push({ name: "Choose", params: { id: this.$route.params.id, codEvent: this.codTicket, cant: this.count, csrf: this.$route.params.csrf } });
+        },
+        async accept() {
+            const requestOptions2 = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            };
+            const response2 = await fetch(URI2 + this.$route.params.id + "?entranceId="+this.codTicket+"&amount="+this.count+"&csrf="+this.$route.params.csrf, requestOptions2);
+            const data2 = await response2.json();
+            console.log(data2)
+            const seats = (data2.disponibles).split(',');
+            const seatChoose=[]
+            console.log(seats);
+            seats.forEach((seat, index) => {
+                if(index<this.count){
+                    console.log('Indice: ' + index + ' Valor: ' + seat);
+                    seatChoose.push(seat)
+                }
+            });
+            console.log(seatChoose)
+            this.seatChooose = seatChoose.join();
+            console.log(this.seatChooose);
+
+            const response3 = await fetch(URI3 + this.$route.params.id + "?eventId=" + this.$route.params.id + 
+            "&payload=" + this.persona +"&entranceId=" + this.codTicket +"&sector=" + this.$route.params.tipo +
+            "&amount=" + this.count +"&shortname=pruebas&seats="+this.seatChooose+
+            "&csrf=" + this.$route.params.csrf, requestOptions2);
+            const data3 = await response3.json();
+            console.log(data3)
+
+
+            // const formData = new FormData();
+            // formData.append(key, value);
+
+            // const response = await fetch(url, {
+            //     method: "POST",
+            //     body: formData,
+            // });
+
+            // var index = this.items.indexOf(this.select);
+            // console.log(this.idTickets[index]);
+            // console.log(this.select);
+            // console.log(this.getTotalPrice());
+            // if (this.select != null && this.getTotalPrice() != 0) {
+            //     console.log("send");
+            //     window.Payment.postMessage(JSON.stringify({
+            //         "count": this.count,
+            //         "totalPrice": this.getTotalPrice(),
+            //         "item": this.select,
+            //         "description": this.count,
+            //     }));
+            // }
         }
     },
+    //components: { ChooseSeats }
 }
 </script>
