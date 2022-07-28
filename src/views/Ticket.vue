@@ -10,7 +10,7 @@
                 >
                 <v-card-title class="mb-6">Seleccione los asientos</v-card-title>
 
-                        <!-- <v-combobox
+                        <v-combobox
 
                             v-model="select"
                             label="Tipo de Ticket"
@@ -19,10 +19,10 @@
                             color="primary"
                             outlined
                         >
-                        </v-combobox> -->
+                        </v-combobox>
                 
-                <!-- <v-row no-gutters align="center"
-      justify="center"
+                <v-row no-gutters align="center"
+                    justify="center"
                     class="mx-12 mb-6">
                     <v-col cols="12" xl="9" lg="9" md="6" sm="7">
                         <v-slider
@@ -45,9 +45,9 @@
                             outlined
                         ></v-text-field>
                     </v-col>
-                </v-row> -->
+                </v-row>
                 <v-row>
-                    <!-- <div id="seatMap">
+                    <div id="seatMap">
                         <div class="seat-charts-row" v-for="(item,x) in seatOrder"  :key="x">
                             <div @click="userChoiceFn(x,y,subItem)" ref="allSeat" class="allPublicGray" v-for="(subItem,y) in getItems(item)" :key="y">
                                 <div v-if="subItem =='a'" :class="{bgBlack: seatGrade[0].off}"><img src="../assets/A.png" width="50" height="50"/></div>
@@ -56,10 +56,10 @@
                                 <div v-if="subItem =='_'"></div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                     <ChooseSeats1/>
                 </v-row>
-                        <!-- <v-text-field
+                        <v-text-field
                             class="mx-12"
                             label="Precio Total"
                             :value="getTotalPrice()+' Bs.'"
@@ -67,11 +67,11 @@
                             placeholder="Placeholder"
                             outlined
                         ></v-text-field>
-                <v-row align="center" justify="center">
-                    <v-btn  class="mb-6" color="primary" v-on:click="accept">
-                    Comprar
-                </v-btn>
-                </v-row> -->
+                    <v-row align="center" justify="center">
+                        <v-btn  class="mb-6" color="primary" v-on:click="accept">
+                        Comprar
+                    </v-btn>
+                </v-row>
                 <!-- <v-row align="center" justify="center">
                     <v-btn  class="mb-6" color="primary" v-on:click="sell()">
                         Comprar
@@ -184,19 +184,24 @@ export default {
             //     body: formData,
             // });
 
-            // var index = this.items.indexOf(this.select);
-            // console.log(this.idTickets[index]);
-            // console.log(this.select);
-            // console.log(this.getTotalPrice());
-            // if (this.select != null && this.getTotalPrice() != 0) {
-            //     console.log("send");
-            //     window.Payment.postMessage(JSON.stringify({
-            //         "count": this.count,
-            //         "totalPrice": this.getTotalPrice(),
-            //         "item": this.select,
-            //         "description": this.count,
-            //     }));
-            // }
+            var index = this.items.indexOf(this.select);
+            console.log(this.idTickets[index]);
+            console.log(this.select);
+            console.log(this.getTotalPrice());
+            if (this.select != null && this.getTotalPrice() != 0) {
+                console.log("send");
+                window.Payment.postMessage(JSON.stringify({
+                    "eventId": this.$route.params.id,
+                    "payload": 'datos de usuario de negocio',
+                    "entranceId": this.codTicket,
+                    "sector": this.$route.params.tipo,
+                    "totalPrice": this.getTotalPrice(),
+                    "amount": this.count,
+                    "shortname": 'prueba',
+                    "seats": this.seatChooose,
+                    "csrf": this.$route.params.csrf
+                }));
+            }
         }
     },
     components: {ChooseSeats1}
