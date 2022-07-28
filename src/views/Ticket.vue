@@ -8,9 +8,9 @@
                     class="mx-auto"
                     elevation="0"
                 >
-                <v-card-title class="mb-6">Selecciona el Ticket</v-card-title>
+                <v-card-title class="mb-6">Seleccione los asientos</v-card-title>
 
-                        <v-combobox
+                        <!-- <v-combobox
 
                             v-model="select"
                             label="Tipo de Ticket"
@@ -19,9 +19,9 @@
                             color="primary"
                             outlined
                         >
-                        </v-combobox>
+                        </v-combobox> -->
                 
-                <v-row no-gutters align="center"
+                <!-- <v-row no-gutters align="center"
       justify="center"
                     class="mx-12 mb-6">
                     <v-col cols="12" xl="9" lg="9" md="6" sm="7">
@@ -45,11 +45,21 @@
                             outlined
                         ></v-text-field>
                     </v-col>
-                </v-row>
+                </v-row> -->
                 <v-row>
-                    <!-- <ChooseSeats/> -->
+                    <!-- <div id="seatMap">
+                        <div class="seat-charts-row" v-for="(item,x) in seatOrder"  :key="x">
+                            <div @click="userChoiceFn(x,y,subItem)" ref="allSeat" class="allPublicGray" v-for="(subItem,y) in getItems(item)" :key="y">
+                                <div v-if="subItem =='a'" :class="{bgBlack: seatGrade[0].off}"><img src="../assets/A.png" width="50" height="50"/></div>
+                                <div v-if="subItem =='b'" :class="{bgBlack: seatGrade[1].off}"><img src="../assets/A.png" width="50" height="50"/></div>
+                                <div v-if="subItem =='c'" :class="{bgBlack: seatGrade[2].off}"><img src="../assets/A.png" width="50" height="50"/></div>
+                                <div v-if="subItem =='_'"></div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <ChooseSeats1/>
                 </v-row>
-                        <v-text-field
+                        <!-- <v-text-field
                             class="mx-12"
                             label="Precio Total"
                             :value="getTotalPrice()+' Bs.'"
@@ -61,7 +71,7 @@
                     <v-btn  class="mb-6" color="primary" v-on:click="accept">
                     Comprar
                 </v-btn>
-                </v-row>
+                </v-row> -->
                 <!-- <v-row align="center" justify="center">
                     <v-btn  class="mb-6" color="primary" v-on:click="sell()">
                         Comprar
@@ -75,7 +85,7 @@
 <script>
 //import Seat from "./Seat.vue";
 import router from '../router';
-//import ChooseSeats from './ChooseSeats.vue';
+import ChooseSeats1 from './ChooseSeats.vue';
 const URI = 'https://superticket-api-4rp34.ondigitalocean.app/compras/sector/';
 const URI2 = 'https://superticket-api-4rp34.ondigitalocean.app/compras/check/';
 const URI3 = 'https://superticket-api-4rp34.ondigitalocean.app/compras/finalizar/';
@@ -189,6 +199,6 @@ export default {
             // }
         }
     },
-    //components: { ChooseSeats }
+    components: {ChooseSeats1}
 }
 </script>

@@ -11,9 +11,9 @@
               <div id="seatMap">
                 <div class="seat-charts-row" v-for="(item,x) in seatOrder"  :key="x">
                   <div @click="userChoiceFn(x,y,subItem)" ref="allSeat" class="allPublicGray" v-for="(subItem,y) in getItems(item)" :key="y">
-                    <div v-if="subItem =='a'" :class="{bgBlack: seatGrade[0].off}"><img src="../assets/A.png" width="50" height="50"/></div>
-                    <div v-if="subItem =='b'" :class="{bgBlack: seatGrade[1].off}"><img src="../assets/A.png" width="50" height="50"/></div>
-                    <div v-if="subItem =='c'" :class="{bgBlack: seatGrade[2].off}"><img src="../assets/A.png" width="50" height="50"/></div>
+                    <div v-if="subItem =='a'" :class="{bgBlack: seatGrade[0].off}"><img src="../assets/VIP.png" width="50" height="50"/></div>
+                    <div v-if="subItem =='b'" :class="{bgBlack: seatGrade[1].off}"><img src="../assets/PRE.png" width="50" height="50"/></div>
+                    <div v-if="subItem =='c'" :class="{bgBlack: seatGrade[2].off}"><img src="../assets/GEN.png" width="50" height="50"/></div>
                     <div v-if="subItem =='_'"></div>
                   </div>
                 </div>
@@ -31,17 +31,18 @@
               </div>
             </div>
             <div class="seat_right">
-                             <h3> Asiento seleccionado [{{seatNumber}}] </h3>
+              <h3> Asiento seleccionados:</h3>
+                             <!-- <h3> Asiento seleccionado [{{seatNumber}}] </h3> -->
               <ul v-if="getSeatCode != []">
                 <li v-for="(item, index) in getSeatCode" :key="index">
-                                     <p> Asiento: {{item.col}} fila {{item.row}} número </p>
+                                     <p> Asiento: Fila: {{item.col}} Butaca: {{item.row}}</p>
                                      <p> Precio: {{item.price}} </p>
-                                     <p> Tribuna: Teatro Central </p>
-                                     <p> Piso: Teatro </p>
+                                     <!-- <p> Tribuna: {{item.evento}} </p> -->
+                                     <p> Tipo: {{item.grade}} </p>
                 </li>
               </ul>
               <h1 v-if="seatNumber != 0">
-                                 <p> Precio total: {{allMoney}} yuanes </p>
+                                 <p> Precio total: {{allMoney}} Bs. </p>
                                  <a @click="toOrder()" href="javascript:;"> Compra </a>
               </h1>
             </div>
@@ -59,33 +60,37 @@ const URI = 'https://superticket-api-4rp34.ondigitalocean.app/compras/check/';
  // Esta matriz es el mapa de distribución de asientos, a = asientos de nivel A, etc., el subrayado_ representa un espacio en blanco
  // Una fila horizontal ocupa 32 posiciones
 var seatOrder = [
-  "_____aaaaa_____aaaa_____aaaa____",
-  "___ccccccc____cccccc____ccccc___",
-  "__aaaaaaaa___aaaaaaaa___aaaaaa__",
-  "__cccccccc__bbbbbbbbbb__ccccccc_",
-  "_aaccccccc_bbbbbbbbbbbb_ccccccca",
-  "_aaccccccc_bbbbbbbbbbbb_ccccccca",
-  "________________________________",
-  "_aaaaaaaaa__cccccccccc__aaaaaaaa",
-  "_aaaaaaaaa__cccccccccc__aaaaaaaa",
-  "__aaaaaaaa___aaaaaaaa___aaaaaaa_",
-  "__aaaaaaaa___aaaaaaaa___aaaaaaa_"
+  "_aaaaaaaaaaa_aaaaaaaaaaa_",
+  "_aaaaaaaaaaa_aaaaaaaaaaa_",
+  "aaaaaa____aa_aaaaaaaaaaaa",
+  "aaaaaaaaaaaa_aaaaaaaaaaaa",
+  "aaaaaaaaaaaa_aaaaaaaaaaaa",
+  "bbbbbbbbbbbb_bbbbbbbbbbbb",
+  "cccccccccccc_cccccccccccc",
+  "cccccccccccc_cccccccccccc",
+  "cccccccccccc_cccccccccccc",
+  "cccccccccccc_cccccccccccc",
+  "cccccccccccc_cccccccccccc",
+  "_ccccccccccc_ccccccccccc_",
+  "__cccccccccc_cccccccccc__",
+  "____cccccccc_cccccccc____",
+  "_______ccccc_ccccc_______"
 ]
 var seatGrade = [
   {
-        'price': '120 yuanes',
-        'grade': 'A grade',
+        'price': '120 Bs',
+        'grade': 'VIP',
         'off':false,
   },
   {
-        'price': '100 yuanes',
-        'grade': 'B grade',
+        'price': '100 Bs',
+        'grade': 'PREFERENCIAL',
         'off':false
   },
   {
-         'price': '90 yuanes',
-         'grade': 'C grade',
-    'off':false
+         'price': '90 Bs',
+         'grade': 'GENERAL',
+         'off':false
   }
 ]
 export default {
@@ -122,11 +127,11 @@ export default {
     },
 
     getRandomArbitrary(min, max) {
-        return (Math.random() * (max - min) + min).toFixed();
-        },
+      return (Math.random() * (max - min) + min).toFixed();
+    },
     accept: function(event_id){
-        router.push({ name: 'Prices', params: { id: event_id}})
-        },
+      router.push({ name: 'Prices', params: { id: event_id}})
+    },
          // Acercar, alejar y mover la página de selección de asientos
     bindScroll() {
              // Agregue eventos de clic y movimiento del mouse, monitoree estos dos eventos y mueva la interfaz modificando los valores superior e izquierdo de posición.
@@ -203,7 +208,7 @@ export default {
         'price':price,
                  'num': x + '-' + y // pasa al campo de fondo, según este campo, busca el asiento que el usuario quiere cancelar
       }
-             var userSitNum = x * 32 + y // Calcula el subíndice del asiento en el que hizo clic el usuario actual
+             var userSitNum = x * 25 + y // Calcula el subíndice del asiento en el que hizo clic el usuario actual
              let oDivs = document.getElementsByClassName ('allPublicGray') // Seleccionar todos los asientos
       //console.log(oDivs[userSitNum].off)
              oDivs [userSitNum] .off =! oDivs [userSitNum] .off // El usuario hace clic en el atributo personalizado del asiento actual para invertir, es decir, seleccionar y cancelar
@@ -211,7 +216,7 @@ export default {
                      if (subItem == 'a' || subItem == 'b' || subItem == 'c') {// Sentencia haga clic en el espacio en blanco sin agregar información de antecedentes y asiento
                                  this.getSeatCode.push (obj) // haga clic para agregar información del asiento
  
-                this.$refs.allSeat[userSitNum].innerHTML = '<img style="width: 16px;height: 16px" src="../../static/img/geted.png"/>'
+                this.$refs.allSeat[userSitNum].innerHTML = '<img style="width: 16px;height: 16px" src="../../static/C.png"/>'
  
                                  this.seatNumber = this.getSeatCode.length // Cantidad de asientos
                                  // Calcula el precio total
@@ -249,7 +254,7 @@ export default {
                 }else if(userPrice.length == 1) {
                   this.allMoney = userPrice[0]
                 }
-          this.$refs.allSeat[userSitNum].innerHTML = '<img style="width: 16px;height: 16px" src="../../static/img/A.png"/>'
+          this.$refs.allSeat[userSitNum].innerHTML = '<img style="width: 16px;height: 16px" src="../../static/A.png"/>'
         }else if(subItem == 'b'){
                 deleteArr = this.getSeatCode.filter(function (item,index) {
                   console.log(index)
@@ -269,7 +274,7 @@ export default {
                 }else if(userPrice.length == 1) {
                   this.allMoney = userPrice[0]
                 }
-          this.$refs.allSeat[userSitNum].innerHTML = '<img style="width: 16px;height: 16px" src="../../static/img/B.png"/>'
+          this.$refs.allSeat[userSitNum].innerHTML = '<img style="width: 16px;height: 16px" src="../../static/B.png"/>'
         }else if(subItem == 'c'){
                 deleteArr = this.getSeatCode.filter(function (item,index) {
                   console.log(index)
@@ -289,7 +294,7 @@ export default {
                 }else if(userPrice.length == 1) {
                   this.allMoney = userPrice[0]
                 }
-          this.$refs.allSeat[userSitNum].innerHTML = '<img style="width: 16px;height: 16px" src="../../static/img/C.png"/>'
+          this.$refs.allSeat[userSitNum].innerHTML = '<img style="width: 16px;height: 16px" src="../../static/C.png"/>'
         }
       }
       //console.log(this.getSeatCode)
@@ -326,40 +331,40 @@ export default {
  
 <style scoped lang="scss">
 #select{
-  background: #f5f5f5 ;
   .main{
-    width: 1200px;
+    width: 95%;
     margin: 0 auto;
     overflow: hidden;
     .brandNav{
-      margin-bottom: 40px;
+      margin-bottom: 0px;
+      background-color: #e1659d;
       .el-breadcrumb{
-        margin-left: 15px;
+        margin-left: 0px;
       }
     }
     .seat{
       background: #fff;
       margin-bottom: 20px;
       &>img{
-        width: 1202px;
+        width: 1200px;
       }
       .seat_wrap{
         display: flex;
         justify-content: space-between;
         .seat_left{
-          width: 1000px;
+          width: 800px;
           height: 674px;
           background: #fff;
           position: relative;
           overflow: hidden;
           #seatMap{
-            width: 800px;
+            width: 100%;
             height: 574px;
             position: absolute;
-            left: 100px;
-            top: 50px;
+            left: 10px;
+            top: 10px;
             .seat-charts-row{
-              margin-bottom: 32px;
+              margin-bottom: 10px;
             }
             .allPublicGray{
               width: 18px;
@@ -375,15 +380,15 @@ export default {
               }
             }
             .bgBlack{
-              background: url("../assets/A.png") no-repeat;
-              background-size: 18px;
+              background: url("../assets/subrayar.png") no-repeat;
+              background-size: 22px;
             }
           }
           .seatStatus {
             position: absolute;
-            border: 1px solid red;
-            width: 200px;
-            height: 200px;
+            border: 5px solid rgb(33, 12, 192);
+            width: 162px;
+            height: 130px;
             left: 0;
             bottom: 0;
             background: #fff;
@@ -393,40 +398,40 @@ export default {
             }
             ul{
               font-size: 12px;
-              margin: 20px;
+              margin: 5px;
               border-bottom: 1px solid #ccc;
               li{
                 margin-bottom: 10px;
-                padding: 0 5px;
+                padding: 0 0px;
                 span:first-of-type{
-                  background: red;
+                  background: rgb(126, 217, 147);
                   display: inline-block;
                   width: 56px;
                   text-align: center;
                 }
                 span:last-of-type{
                   font-weight: bold;
-                  padding-left: 10px;
+                  padding-left: 5px;
                 }
                 input{
-                  margin-left: 10px;
+                  margin-left: 5px;
                 }
               }
               li:nth-of-type(2){
                 span:first-of-type{
-                  background: #fd68a6;
+                  background: #5ea3dc;
                 }
               }
               li:nth-of-type(3){
                 span:first-of-type{
-                  background: #65a9fd;
+                  background: #8068e0;
                 }
               }
             }
           }
         }
         .seat_right{
-          width: 200px;
+          width: 30%;
           height: 674px;
           background: #efefef;
           overflow:auto ;
