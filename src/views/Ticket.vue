@@ -57,7 +57,7 @@
                             </div>
                         </div>
                     </div>
-                    <ChooseSeats1/>
+                    <!-- <ChooseSeats1/> --> 
                 </v-row>
                         <v-text-field
                             class="mx-12"
@@ -85,7 +85,7 @@
 <script>
 //import Seat from "./Seat.vue";
 import router from '../router';
-import ChooseSeats1 from './ChooseSeats.vue';
+
 const URI = 'https://superticket-api-4rp34.ondigitalocean.app/compras/sector/';
 const URI2 = 'https://superticket-api-4rp34.ondigitalocean.app/compras/check/';
 const URI3 = 'https://superticket-api-4rp34.ondigitalocean.app/compras/finalizar/';
@@ -132,7 +132,7 @@ export default {
             data.precio_entrada.forEach(element => {
                 this.precios.push(element);
             });
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < this.tipo.length; i++) {
                 this.items.push(this.tipo[i] + " - " + this.precios[i]);
             }
         },
@@ -203,7 +203,6 @@ export default {
                 }));
             }
         }
-    },
-    components: {ChooseSeats1}
+    }
 }
 </script>
